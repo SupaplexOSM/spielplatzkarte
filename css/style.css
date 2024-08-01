@@ -1,0 +1,70 @@
+@import "../node_modules/ol/ol.css";
+@import "../css/ol_controls.css";
+@import "../css/bootstrap_custom.css";
+
+/* Listeneinzug reduzieren */
+ul {
+    padding-left: 13px;
+    margin: 0;
+}
+
+/* Mauszeiger über Text soll nicht Textauswahl-Cursor sein */
+p, h1, h2, h3, h4, h5, h6, ul, ol, .cursor-default {
+    cursor: default;
+}
+
+/* CSS für Infobox */
+#info {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 350px;
+    background-color: rgba(240,240,240,0.85);
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    overflow-y: auto;
+}
+
+/* CSS für Popup */
+#popup {
+    background-color: white;
+    position: absolute;
+    bottom: 5px;
+}
+
+/* Eigene Klassen zur Anzeige verschiedener Cursor */
+.grab {
+    cursor: grab;
+}
+
+.grabbing {
+    cursor: grabbing !important;
+}
+
+.info {
+    cursor: help;
+}
+
+.custom-range {
+    cursor: col-resize;
+}
+
+/* Rahmen bei Hover über Schattenmatrix */
+.matrix:hover {
+    border: 2px solid #F0F0F0 !important;
+}
+
+#mini-popup {
+    position: absolute;
+    display: none;
+    padding: 3px;
+    background-color: #F0F0F0;
+    border-radius: 3px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* TODO: Accordeon-Hintergrund leicht transparent machen (wird bisher noch von irgendeinem Element überdeckt) */
+/* .collapse.show {
+    background-color: rgba(240,240,240,0.5);
+} */

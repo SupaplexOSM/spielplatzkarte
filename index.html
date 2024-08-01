@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html class="h-100">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>Berliner Spielplatzkarte</title>
+        <link rel="icon" type="image/x-icon" href="./img/favicon/favicon.ico">
+
+        <script src="./lib/jquery/jquery-3.7.1.min.js" type="module"></script>
+        <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
+        <script src="./lib/bootstrap/js/bootstrap.bundle.min.js" type="module"></script>
+        <link rel="stylesheet" href="./lib/bootstrap-icons/font/bootstrap-icons.css">
+        <link href="./css/bootstrap_custom.css" rel="stylesheet">
+        <link href="./css/ol_controls.css" rel="stylesheet">
+        <script type="module" src="./js/main.js"></script>
+    </head>
+    <body class="h-100">
+
+
+
+        <!------------------------------>
+        <!-- Navigations-/Titelleiste -->
+        <!------------------------------>
+        
+        <header>
+            <nav class="navbar navbar-expand-md bg-primary-op-75 position-fixed z-1 w-100" style="--bs-bg-opacity: .75;">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="./img/swing.png" alt="Logo" height="24" class="d-inline-block align-text-top">
+                        <b>Berliner Spielplatzkarte</b>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Hauptmenü öffnen">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav" style="align-items: center;">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalDatenErgaenzen">Daten ergänzen</a>
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalUeberDasProjekt">Über das Projekt</a>
+
+                            <!-- TODO absolute Positionierung aufgeben, wenn die Suche auf schmalen Bildschirmen in das Button-Menü wandert -->
+                            <div class="form d-flex align-items-center" style="position: absolute; right: 10px;">
+                                <span id="inputSearchIcon" class="bi bi-search"></span>
+                                <input id="inputSearch" type="text" class="form-control form-input" placeholder="Suche...">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+
+
+        <!------------------->
+        <!-- Kartenbereich -->
+        <!------------------->
+        
+        <main class="h-100">
+            <div class="h-100">
+
+                <!-- Kartenfenster -->
+                <div id="map" class="h-100 grab"></div>
+                <div id="popup"></div>
+                <div id="mini-popup"></div>
+
+                <!--------------------------------------->
+                <!-- Infobereich für Spielplatzdetails -->
+                <!--------------------------------------->
+                <div id="info" class="border-start border-primary border-3 rounded-start-3">
+                    <div id="info-more" class="m-2">
+                        <p><i>Klicke auf einen Spielplatz, um mehr über ihn zu erfahren.</i></p>
+                        <div class="d-flex align-items-center">
+                            <img src="./img/legend/circles.png" alt="Legende Spielplatzgröße" class="mr-3" style="width: 72px;">
+                            <p class="my-0 mx-2" style="font-size: small;">Riesen-Spielplatz<br>Großer Spielplatz<br>Kleiner Spielplatz<br>Mini-Spielplatz</p>
+                        </div>
+                        <div class="mt-2" style="font-size: small;">
+                            <span style="color: #ed7014; font-size: 30px; line-height: 15px; vertical-align: sub;">●</span> öffentliche/freie Zugänglichkeit<br>
+                            <span style="color: #f9af78; font-size: 30px; line-height: 15px; vertical-align: sub;">●</span> geduldete oder unbekannte Zugänglichkeit<br>
+                            <span style="color: #f69cc3; font-size: 30px; line-height: 15px; vertical-align: sub;">●</span> private/eingeschränkte Zugänglichkeit
+                        </div>
+                    </div>
+                    <div id="info-base" class="bg-primary text-light p-2 m-0" style="display: none;">
+                        <h2 id="info-name" class="fs-5 fw-bold pb-1 mb-0"></h2>
+                        <p id="info-location" class="border-bottom border-light border-2 pb-2 mb-2"></p>
+                        <p id="info-area" class="my-0 mt-2"></p>
+                        <p id="info-access" class="m-0 p-0"></p>
+                        <p id="info-description" class="mt-1 mb-1" style="font-size: smaller;"></p>    
+                    </div>
+
+                    <div id="info-accordion" class="accordion accordion-flush accordion-orange" style="display: none;">
+
+                        <!------------------------------->
+                        <!-- Infobereich "Ausstattung" -->
+                        <!------------------------------->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button id="accordion-btn-ausstattung" class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-ausstattung" aria-expanded="false" aria-controls="accordion-ausstattung">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" id="layer-switch-ausstattung" type="checkbox" role="switch" checked>
+                                    </div>
+                                    Ausstattung
+                                </button>
+                            </h2>
+                            <div id="accordion-ausstattung" class="accordion-collapse collapse show" data-bs-parent="#info-accordion">
+                                <div class="accordion-body p-2">
+
+                                    <p id="info-equipment" class="mb-0 p-0"></p>
+                                    <p id="info-device-note" class="mb-2 p-0 text-body-tertiary" style="font-size: smaller;"></p>
+                                    <p id="info-device-list-title" class="mt-2 mb-1 p-0"></p>
+                                    <div id="info-device-list" class="mb-2 p-0"></div>
+
+                                    <!-- Fotogalerie -->
+                                    <div id="info-galery" class="carousel slide pb-2" style="display: none;">
+                                        <div id="info-galery-indicators" class="carousel-indicators">
+                                            <!-- werden dynamisch gefüllt -->
+                                        </div>
+                                        <div id="info-galery-items" class="carousel-inner border border-dark border-2 rounded">
+                                            <!-- werden dynamisch gefüllt -->
+                                        </div>
+                                        <button id="info-galery-prev" class="carousel-control-prev" type="button" data-bs-target="#info-galery" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Nächstes Foto</span>
+                                        </button>
+                                        <button id="info-galery-next" class="carousel-control-next" type="button" data-bs-target="#info-galery" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Vorheriges Foto</span>
+                                        </button>
+
+                                        <!-- Info-Button bei fehlenden Bildern -->
+                                        <button id="info-image-missing" type="button" class="btn btn-outline-light btn-sm" style="position: absolute; bottom: 23px; right: 12px; z-index: 2; display: none;" data-bs-toggle="modal" data-bs-target="#modalDatenErgaenzen">
+                                            Warum nicht?
+                                        </button>                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-------------------------------->
+                        <!-- Infobereich "Schattigkeit" -->
+                        <!-------------------------------->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button id="accordion-btn-schattigkeit" class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-schattigkeit" aria-expanded="false" aria-controls="accordion-schattigkeit">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" id="layer-switch-schattigkeit" type="checkbox" role="switch">
+                                    </div>
+                                    Schattigkeit
+                                </button>
+                            </h2>
+                            <div id="accordion-schattigkeit" class="accordion-collapse collapse" data-bs-parent="#info-accordion">
+                                <div class="accordion-body p-0">
+                                    <div class="p-2">
+
+                                        <!-- Slider -->
+                                        <div class="container slider-container m-0 p-0">
+                                            <div id="shadow-slider-month-label" class="slider-label">0</div>
+                                            <input id="shadow-slider-month" type="range" class="custom-range" min="1" max="12" style="width: 100%;">
+                                        </div>
+                                        <div class="container slider-container m-0 p-0">
+                                            <div id="shadow-slider-hour-label" class="slider-label">0</div>
+                                            <input id="shadow-slider-hour" type="range" class="custom-range" min="9" max="19" step="2" style="width: 100%;">
+                                        </div>
+
+                                        <!-- Progressbar -->
+                                        <div class="progress mt-2 p-0" role="progressbar" style="height: 28px; background-color: #E0E0E0;" aria-label="Schattenanteil" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100">
+                                            <div id="shadow-bar" class="progress-bar progress-bar-striped bg-primary" style="width: 0%"></div>
+                                        </div>
+                                        <p class="m-0 p-0 pt-2">
+                                            <span id="shadow-percent-description"></span></span>
+                                            <span class="text-body-tertiary" style="font-size: smaller;">(<span id="shadow-percent-value"></span> Prozent des Spielplatzes sind zu dieser Zeit von Schatten bedeckt.)</span>
+                                        </p>
+
+                                        <hr class="my-2 p-0" style="border: 2px solid #ed7014; opacity: 1;">
+
+                                        <!-- Mittlere Schattigkeit -->
+                                        <p class="m-0">Im Jahresmittel:</p>
+                                        <ul class="m-0">
+                                            <li>vormittags <span id="shadow-description-morning">NaN</span></li>
+                                            <li>nachmittags <span id="shadow-description-afternoon">NaN</span></li>
+                                        </ul>
+
+                                        <!-- Schattigkeitsmatrix -->
+                                        <div class="container mt-2 p-0">
+                                            <!-- Title -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div class="pe-1" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;"></div>
+                                                <!-- J --> <div id="matrix-month-1" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">J</div>
+                                                <!-- F --> <div id="matrix-month-2" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">F</div>
+                                                <!-- M --> <div id="matrix-month-3" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">M</div>
+                                                <!-- A --> <div id="matrix-month-4" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">A</div>
+                                                <!-- M --> <div id="matrix-month-5" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">M</div>
+                                                <!-- J --> <div id="matrix-month-6" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">J</div>
+                                                <!-- J --> <div id="matrix-month-7" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">J</div>
+                                                <!-- A --> <div id="matrix-month-8" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">A</div>
+                                                <!-- S --> <div id="matrix-month-9" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">S</div>
+                                                <!-- O --> <div id="matrix-month-10" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">O</div>
+                                                <!-- N --> <div id="matrix-month-11" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">N</div>
+                                                <!-- D --> <div id="matrix-month-12" class="cursor-default" style="background-color: #E0E0E0; height: 20px; font-size: smaller; text-align: center; width: 7.25%;">D</div>
+                                            </div>
+                                            <!-- 09:00 -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div id="matrix-hour-9" class="pe-1 cursor-default" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;">9:00</div>
+                                                <!-- J --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- F --> <div id="shadow-matrix-9-2" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-9-3" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-9-4" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-9-5" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-9-6" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-9-7" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-9-8" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- S --> <div id="shadow-matrix-9-9" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- O --> <div id="shadow-matrix-9-10" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- N --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- D --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                            </div>
+                                            <!-- 11:00 -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div id="matrix-hour-11" class="pe-1 cursor-default" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;">11:00</div>
+                                                <!-- J --> <div id="shadow-matrix-11-1" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- F --> <div id="shadow-matrix-11-2" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-11-3" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-11-4" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-11-5" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-11-6" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-11-7" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-11-8" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- S --> <div id="shadow-matrix-11-9" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- O --> <div id="shadow-matrix-11-10" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- N --> <div id="shadow-matrix-11-11" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- D --> <div id="shadow-matrix-11-12" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                            </div>
+                                            <!-- 13:00 -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div id="matrix-hour-13" class="pe-1 cursor-default" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;">13:00</div>
+                                                <!-- J --> <div id="shadow-matrix-13-1" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- F --> <div id="shadow-matrix-13-2" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-13-3" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-13-4" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-13-5" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-13-6" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-13-7" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-13-8" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- S --> <div id="shadow-matrix-13-9" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- O --> <div id="shadow-matrix-13-10" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- N --> <div id="shadow-matrix-13-11" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- D --> <div id="shadow-matrix-13-12" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                            </div>
+                                            <!-- 15:00 -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div id="matrix-hour-15" class="pe-1 cursor-default" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;">15:00</div>
+                                                <!-- J --> <div id="shadow-matrix-15-1" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- F --> <div id="shadow-matrix-15-2" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-15-3" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-15-4" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-15-5" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-15-6" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-15-7" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-15-8" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- S --> <div id="shadow-matrix-15-9" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- O --> <div id="shadow-matrix-15-10" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- N --> <div id="shadow-matrix-15-11" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- D --> <div id="shadow-matrix-15-12" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                            </div>
+                                            <!-- 17:00 -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div id="matrix-hour-17" class="pe-1 cursor-default" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;">17:00</div>
+                                                <!-- J --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- F --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-17-3" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-17-4" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-17-5" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-17-6" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-17-7" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div id="shadow-matrix-17-8" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- S --> <div id="shadow-matrix-17-9" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- O --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- N --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- D --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                            </div>
+                                            <!-- 19:00 -->
+                                            <div class="d-flex flex-wrap">
+                                                <!--   --> <div id="matrix-hour-19" class="pe-1 cursor-default" style="background-color: #E0E0E0; width: 13%; height: 20px; font-size: smaller; text-align: right;">19:00</div>
+                                                <!-- J --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- F --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- M --> <div id="shadow-matrix-19-5" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-19-6" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- J --> <div id="shadow-matrix-19-7" class="matrix" style="background-color: #474300; height: 20px; width: 7.25%;"></div>
+                                                <!-- A --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- S --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- O --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- N --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                                <!-- D --> <div style="background-color: #E0E0E0; height: 20px; width: 7.25%;"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Legende Schattenmatrix -->
+                                        <img src="./img/legend/legend_shadow.png" alt="Legende Schattenmatrix" class="p-0 m-0 mt-3" style="width: 331px;">
+                                        <div class="w-100 d-flex flex-row p-0 m-0">
+                                            <div class="p-1 text-body-tertiary p-0 m-0" style="font-size: smaller;">
+                                                gar kein Schatten
+                                            </div>
+                                            <div class="ms-auto p-1 text-body-tertiary p-0 m-0" style="font-size: smaller;">
+                                                nur Schatten
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-------------------------->
+                        <!-- Infobereich "Umfeld" -->
+                        <!-------------------------->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button id="accordion-btn-umfeld" class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-umfeld" aria-expanded="false" aria-controls="accordion-umfeld">
+                                    Umfeld&nbsp;&nbsp;<span class="badge text-bg-danger" style="font-size: xx-small;">TODO</span>
+                                </button>
+                            </h2>
+                            <div id="accordion-umfeld" class="accordion-collapse collapse" data-bs-parent="#info-accordion">
+                                <div class="accordion-body p-2">
+                                    <i>Hier folgt bald eine Ansicht zu interesssanten Orten im Umfeld des Spielplatzes, wie Haltestellen, Toiletten oder Eiscafés.</i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!---------------------------------------->
+                        <!-- Infobereich "Datenvollständigkeit" -->
+                        <!---------------------------------------->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button id="accordion-btn-datenvollstaendigkeit" class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-datenvollstaendigkeit" aria-expanded="false" aria-controls="accordion-datenvollstaendigkeit">
+                                    Datenvollständigkeit&nbsp;&nbsp;<span class="badge text-bg-danger" style="font-size: xx-small;">TODO</span>
+                                </button>
+                            </h2>
+                            <div id="accordion-datenvollstaendigkeit" class="accordion-collapse collapse" data-bs-parent="#info-accordion">
+                                <div class="accordion-body p-2">
+                                    <p class="mb-0"><a href="#" id="info-osm-url">Diesen Spielplatz bei OSM anzeigen</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+
+
+        <!--------------------------->
+        <!-- Steuerungs-/Fußleiste -->
+        <!--------------------------->
+        
+        <footer>
+            <!-- Footer-div mit leicht transparentem Hintergrund, alle Inhalte vertikal mittig ausgerichtet -->
+            <!-- Flex (row), um Elemente nebeneinander anzuzeigen -->
+            <div class="bg-primary-op-75 fixed-bottom w-100 d-flex flex-row" style="align-items: center;">
+
+                <!-- Standort verfolgen -->
+                <div class="p-1">
+                    <button id="btn-location" type="button" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Standort verfolgen"><span class="bi bi-crosshair"></span></button>
+                </div>
+
+                <!-- Mausposition -->
+                <div class="p-1">
+                    <div id="mouse-position-ortsteil" class="cursor-default" style="font-size: 11px;">Berlin</div>
+                    <div id="mouse-position" class="cursor-default" style="font-size: 11px;"></div>
+                </div>
+                
+                <!-- Spielgerätefinder und Filterauswahl -->
+                <div class="ms-auto p-1">
+                    <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#map-filters"><span class="bi bi-toggles2"></span> Spielplatzfilter</button>
+                </div>
+                <div class="p-1">
+                    <button type="button" id="btn-device-finder" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#device-finder"><span class="bi bi-binoculars-fill"></span> Spielgerätefinder</button>
+                </div>
+                <div class="p-1">
+                    <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#map-issues"><span class="bi bi-exclamation-diamond-fill"></span> Datenprobleme</button>
+                </div>
+
+                <!-- Auswahl Hintergrundkarte - ausgerichtet am rechten Rand (ms-auto) -->
+                <div class="p-1">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Hintergrundkarte:</span>
+                        <select id="select-basemap" class="form-select form-select-sm" style="width: 210px; flex: 0 0 auto;" aria-label="Layerauswahl"> 
+                            <!-- wird später dynamisch mit verfügbaren Basemaps gefüllt -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+
+        <!--------------------------->
+        <!-- Toast (Notifications) -->
+        <!--------------------------->
+
+        <div class="toast-container position-absolute" style="right: 10px; top: 65px;">
+            <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div id="toast-text" class="toast-body">
+                        <!-- Notification wird programmatisch festgelegt -->
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!------------>
+        <!-- Modals -->
+        <!------------>
+        
+        <!-- Kartenfilter -->
+        <div class="modal fade" id="map-filters" data-bs-keyboard="false" tabindex="-1" aria-label="Kartenfilter" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4">Spielplätze filtern</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterPrivate">
+                            <label class="form-check-label" for="filterPrivate">Nur öffentliche/frei zugängliche Spielplätze anzeigen</label>
+                        </div>  
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterArea">
+                            <label class="form-check-label" for="filterArea">Mini-Spielplätze ausblenden</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterWater">
+                            <label class="form-check-label" for="filterWater">Nur Wasserspielplätze anzeigen</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterShadow">
+                            <label class="form-check-label" for="filterShadow">Nur schattige Spielplätze anzeigen</label>
+                            <span class="text-body-tertiary" style="font-size: smaller;">(Den Zeitpunkt dafür kannst du in der Schattigkeitsansicht selbst bestimmen.)</span>
+                        </div>
+
+                        <hr>
+                        <h6>Zugänglichkeit der Spielgeräte:</h6>
+                        <p class="fst-italic">Zeige nur Spielplätze...</p>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterBaby">
+                            <label class="form-check-label" for="filterBaby">mit Baby-gerechten Spielgeräten</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterToddler">
+                            <label class="form-check-label" for="filterToddler">mit Kleinkind-gerechten Spielgeräten</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterWheelchair">
+                            <label class="form-check-label" for="filterWheelchair">mit Rollstuhl-gerechten Spielgeräten</label>
+                        </div>
+
+                        <hr>
+                        <h6>Ausstattungsmerkmale:</h6>
+                        <p class="fst-italic">Zeige nur Spielplätze...</p>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterBench">
+                            <label class="form-check-label" for="filterBench">mit Sitzbänken</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterPicnic">
+                            <label class="form-check-label" for="filterPicnic">mit Picknickmöglichkeit</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterShelter">
+                            <label class="form-check-label" for="filterShelter">mit Unterstand</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterTableTennis">
+                            <label class="form-check-label" for="filterTableTennis">mit Tischtennisplatte</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterSoccer">
+                            <label class="form-check-label" for="filterSoccer">mit Fußballplatz</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="filterBasketball">
+                            <label class="form-check-label" for="filterBasketball">mit Basketballplatz</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spielgerätefinder -->
+        <div class="modal fade" id="device-finder" data-bs-keyboard="false" tabindex="-1" aria-label="Spielgerätefinder" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4">
+                            <div class="form-check form-switch">
+                                <input id="show-filtered-equipment" class="form-check-input" type="checkbox" role="switch">
+                                <label class="form-check-label mb-2" for="show-filtered-equipment">Spielgeräte finden</label>
+                            </div>
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <!-- Dropdown-Menü für Spielgeräteauswahl -->
+                        <select id="select-device" class="form-select" aria-label="Spielgeräteauswahl">
+                            <!-- dynamisch gefüllt -->
+                        </select>
+                        <div id="filter-length" class="input-group">
+                            <span class="input-group-text" style="width: 100px;">
+                                <input id="filter-length-checkbox" class="form-check-input" type="checkbox">
+                                &nbsp;Länge:
+                            </span>
+                            <select id="filter-length-operator" class="form-select" disabled>
+                                <option value="<=">&lt;=</option>
+                                <option value=">=">&gt;=</option>
+                            </select>
+                            <input id="filter-length-value" type="number" class="form-control" value="15" min="0" max="99" disabled>
+                            <span class="input-group-text">Meter</span>
+                        </div>
+                        <div id="filter-height" class="input-group">
+                            <span class="input-group-text" style="width: 100px;">
+                                <input id="filter-height-checkbox" class="form-check-input" type="checkbox">
+                                &nbsp;Höhe:
+                            </span>
+                            <select id="filter-height-operator" class="form-select" disabled>
+                                <option value="<=">&lt;=</option>
+                                <option value=">=">&gt;=</option>
+                            </select>
+                            <input id="filter-height-value" type="number" class="form-control" value="2" min="0" max="99" disabled>
+                            <span class="input-group-text">Meter</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datenprobleme -->
+        <div class="modal fade" id="map-issues" data-bs-keyboard="false" tabindex="-1" aria-label="Datenprobleme" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4">
+                            <div class="form-check form-switch my-2">
+                                <input id="show-map-issues" class="form-check-input" type="checkbox" role="switch">
+                                <label class="form-check-label" for="show-map-issues">Datenprobleme anzeigen</label>
+                            </div>
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <p>Die Daten für diese Karte stammen direkt aus <a href="https://de.wikipedia.org/wiki/OpenStreetMap" class="link-secondary">OpenStreetMap</a>. Sie können unvollständig oder fehlerhaft sein. Die Datenproblem-Ansicht richtet sich an OSM-Mapper und zeigt mögliche Verbesserungsbedarfe oder Probleme an, die sich vor Ort oder aus der Ferne ergänzen oder beheben lassen können.</p>
+                        <hr>
+                        <h6>Nach Problemkategorien filtern:</h6>
+                        <div class="form-check form-switch my-2">
+                            <input id="filter-map-issues-1" class="form-check-input" type="checkbox" role="switch" checked>
+                            <label class="form-check-label" for="filter-map-issues-1">Geometrische Probleme an Spielplätzen</label>
+                        </div>
+                        <div class="form-check form-switch my-2">
+                            <input id="filter-map-issues-2" class="form-check-input" type="checkbox" role="switch" checked>
+                            <label class="form-check-label" for="filter-map-issues-2">Geometrische Probleme an Spielgeräten</label>
+                        </div>
+                        <div class="form-check form-switch my-2">
+                            <input id="filter-map-issues-3" class="form-check-input" type="checkbox" role="switch" checked>
+                            <label class="form-check-label" for="filter-map-issues-3">Fehlende/fehlerhafte/unspezifische wichtige Basisinformationen</label>
+                        </div>
+                        <div class="form-check form-switch my-2">
+                            <input id="filter-map-issues-4" class="form-check-input" type="checkbox" role="switch" checked>
+                            <label class="form-check-label" for="filter-map-issues-4">Fehlende Detailattribute an Ausstattungsmerkmalen</label>
+                        </div>
+                        <div class="form-check form-switch my-2">
+                            <input id="filter-map-issues-5" class="form-check-input" type="checkbox" role="switch" checked>
+                            <label class="form-check-label" for="filter-map-issues-5">Fehlende Details zur Schattenberechnung an Gebäuden und Bäumen</label>
+                        </div>
+                        <!-- <div class="form-check form-switch my-2">
+                            <input id="filter-map-issues-9" class="form-check-input" type="checkbox" role="switch" checked>
+                            <label class="form-check-label" for="filter-map-issues-9">Spielplätze ohne Datenprobleme</label>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal "Daten ergänzen" -->
+        <div class="modal fade" id="modalDatenErgaenzen" tabindex="-1" aria-labelledby="Daten ergänzen" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Daten ergänzen</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Die Daten für diese Karte stammen direkt aus <a href="https://de.wikipedia.org/wiki/OpenStreetMap" class="link-secondary">OpenStreetMap</a>. OpenStreetMap ist eine freie, kollaborative Karte, die von Millionen Freiwilligen auf der ganzen Welt erstellt und gepflegt wird. In OpenStreetMap – und genauso in dieser Spielplatzkarte – sind also nur die Daten enthalten, die auch jemand eingetragen hat!</p>
+                        <p>Du kannst selbst dazu beitragen, die Karte zu vervollständigen, denn jede und jeder kann bei OpenStreetMap (OSM) mitmachen. Allgemeine Hinweise zum Einstieg in OSM gibt es unter anderem bei <a href="https://learnosm.org/de/beginner/" class="link-secondary">LearnOSM.org</a>.</p>
+                        <p>Wenn du Spielplätze in OSM beitragen möchtest und dich bereits ein bisschen mit OpenStreetMap auskennst, wirf doch einen Blick auf die Seite über <a href="https://wiki.openstreetmap.org/wiki/Tag:leisure%3Dplayground" class="link-secondary">Spielplätze im OSM-Wiki</a> sowie die Seite zur <a href="https://wiki.openstreetmap.org/wiki/Key:playground" class="link-secondary">Erfassung einzelner Spielgeräte</a>.</p>
+                        <p><b>Ein Hinweis zur Ergänzung von Fotos:</b> Um einen besseren Eindruck der Spielplätze zu bekommen, lohnt es sich, eins oder mehrere Fotos zu hinterlegen. Am Besten ist es, die Fotos in <a href="https://commons.wikimedia.org/wiki/Hauptseite" class="link-secondary">Wikimedia Commons</a> hochzuladen und über das <a href="https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons" class="link-secondary">wikimedia_commons-Tagging</a> in OSM zu hinterlegen. Es ist auch möglich, in der Spielplatzkarte eine ganze Gallerie von Fotos anzuzeigen, wenn in Wikimedia Commons eine eigene Kategorie für einen Spielplatz angelegt wird und diese dann am Spielplatzobjekt hinterlegt wird. Dieser Spielplatz ist <a href="https://www.openstreetmap.org/way/552643786" class="link-secondary">ein Beispiel</a> dafür.</p>
+                        <p>In Zukunft wird es hier auch weitere Informationen und Anleitungen zum Mappen von Spielplätzen geben!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zurück zur Karte</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal "Über das Projekt" -->
+        <div class="modal fade" id="modalUeberDasProjekt" tabindex="-1" aria-labelledby="Über das Projekt" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Über das Projekt</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Die Spielplatzkarte ist eine freie und interaktive Web-Karte zur digitalen Erkundung von Spielplätzen und Spielgeräten. Die Daten dafür kommen aus <a href="https://de.wikipedia.org/wiki/OpenStreetMap" class="link-secondary">OpenStreetMap</a>.</p>
+                        <p>Die Spielplatzkarte ist ein Projekt der Berliner OpenStreetMap-Community, initiiert von Alex Seidel im Rahmen einer Weiterbildung <a href="https://gis-trainer.com/de/gis_webmapping.php" class="link-secondary">GIS- und Webmapping</a> bei <a href="https://gis-trainer.com/de/index.php" class="link-secondary">GIS-Trainer</a>.</p>
+                        <p>Alex ist erreichbar über sein <a href="https://www.openstreetmap.org/user/Supaplex030/" class="link-secondary">OSM-User-Profil</a> oder per Mail an alex (a) osm-berlin (.) org.</p>
+                        <p>Das Projekt ist OpenSource und <a href= "https://github.com/SupaplexOSM/spielplatzkarte" class="link-secondary"> auf GitHub verfügbar</a>.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zurück zur Karte</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

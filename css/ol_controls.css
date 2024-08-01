@@ -1,0 +1,17 @@
+/* Position der OpenLayer-Controls der Hauptkarte anpassen, damit sie nicht unter Navbar und Fußleiste liegen */
+
+div#map div.ol-zoom {
+    top: 70px;
+}
+
+div#map div.ol-scale-line {
+    bottom: 48px;
+}
+
+div#map div.ol-scale-bar {
+    bottom: 48px;
+}
+
+div#map div.ol-attribution {
+    bottom: 48px;
+}

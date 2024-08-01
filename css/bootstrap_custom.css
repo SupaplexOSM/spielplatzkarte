@@ -1,0 +1,115 @@
+/* Bootstrap-Farbschema anpssen (primary-color: orange */
+
+:root {
+    --bs-primary: #ed7014;
+    --bs-primary-opacity-75: rgba(237, 112, 20, 0.75);
+    --bs-primary-darken-10: #d16212;
+    --bs-primary-lighten-10: #ef7e2c;
+    --bs-primary-lighten-20: #f18d43;
+}
+
+.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+.text-bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+.bg-primary-op-75 {
+    background-color: var(--bs-primary-opacity-75) !important;
+}
+
+.border-primary {
+    border-color: var(--bs-primary) !important;
+}
+
+.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: var(--bs-primary-darken-10) !important;
+  border-color: var(--bs-primary-darken-10) !important;
+}
+
+/* Attribut-Infofenster */
+
+.accordion-button {
+    background-color: var(--bs-primary-lighten-20);
+    color: #f8f9fa;
+    font-weight: bold;
+}
+
+.accordion-button:hover,
+.accordion-button:focus,
+.accordion-button:active,
+.accordion-button.active,
+.accordion-button:not(.collapsed),
+.show > .accordion-button.dropdown-toggle {
+    background-color: var(--bs-primary);
+    color: #f8f9fa;
+}
+
+/* Primärfarbe von Checkboxen ändern */
+
+.form-check-input:checked {
+    background-color: var(--bs-primary);
+}
+
+/* Input Suche */
+
+.form-input {
+    height: 35px;
+    text-indent: 20px;
+    border-radius: 5px;
+}
+
+.form .bi-search {
+    position: relative;
+    left: 25px;
+    color: #9ca3af;
+
+}
+
+/* Fotogalerie */
+
+.carousel-item {
+    /* Feste Fotogröße */
+    height: 250px;
+    width: 100%;
+    /* dunkler Hintergrund außerhalb des Bildrandes */
+    background-color: #212529;
+}
+
+.carousel-item img {
+    /* Bilder innerhalb der Galerie sollen maximal so groß sein wie das Galerie-div, ohne zu verzerren */
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+
+    /* Bilder stets zentrieren */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Popover für Spielplatz-/Spielgeräte-Popups */
+
+.popover .popover-body,
+.popover .popover-header {
+    padding: 7px;
+    white-space: nowrap; /* kein Umbruch, damit Einträge möglichst einzeilig angezeigt werden */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
