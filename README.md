@@ -6,7 +6,9 @@ Die Berliner Spielplatzkarte ist eine interaktive Webmap zur Erkundung von Spiel
 - Filterung von Spielplätzen und Suche nach Spielgeräten,
 - Anzeige von OSM-Datenproblemen.
 
-Derzeit benötigt die Spielplatzkarte für die Darstellung der Daten einen [GeoServer](https://geoserver.org/), der die Daten aus einer PostgreSQL-Datenbank ausliefert.
+# Technischer Hintergrund
+* Die Spielplatzkarte basiert auf [OpelLayers](https://openlayers.org/). Hinweise zur Installation von OpenLayers mit Node.js sind im [OpenLayers-Quickstart](https://openlayers.org/doc/quickstart.html) zu finden.
+* Derzeit benötigt die Spielplatzkarte für die Darstellung der Daten einen [GeoServer](https://geoserver.org/), der die Daten aus einer PostgreSQL-Datenbank ausliefert.
 
 ![grafik](https://github.com/SupaplexOSM/spielplatzkarte/assets/66696066/60fd5098-f795-42ad-bc82-7e8d7d4a5bd2)
 ![grafik](https://github.com/SupaplexOSM/spielplatzkarte/assets/66696066/da207a7f-398a-4feb-977c-6206ac91281d)
