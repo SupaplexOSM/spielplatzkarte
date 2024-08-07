@@ -15,9 +15,11 @@ import { sourceSelected } from './selectPlayground.js';
 import { geoServer } from './map.js';
 
 // Slider auf aktuellen Monat und Uhrzeit einstellen
+var shadowSliderInit = true;
 export function setCurrentDate() {
     $('#shadow-slider-month').val(getCurrentMonth()).trigger('input');
     $('#shadow-slider-hour').val(getCurrentHour()).trigger('input');
+    shadowSliderInit = false;
 }
 
 // Aktuellen Tag und Tageszeit ermitteln
@@ -48,6 +50,9 @@ function getRoundedHour(hour) {
 }
 
 function getValidHour(hour, month, notification) {
+    if (shadowSliderInit) {
+        notification = false; // Keine Notifications, wenn die Slider zu Beginn des Seitenaufrufs automatisch auf das aktuelle Datum gesetzt werden
+    }
     const validHours = {
         1: [11, 13, 15],
         2: [9, 11, 13, 15],

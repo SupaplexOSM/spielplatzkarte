@@ -259,10 +259,18 @@ map.on('click', function(evt) {
 });
 
 // Mouse-Move-Events (Popups anzeigen, Cursor ändern)
+var pixel_last, coordinate_last;
+var timer;
 map.on('pointermove', function(evt) {
 
-    var pixel = evt.pixel;
-    var coordinate = evt.coordinate;
+    // aktuelle Mausposition
+    const pixel = evt.pixel;
+    const coordinate = evt.coordinate;
+    
+    // Timer aktivieren, damit WMS-Popup-Datenabfragen an den Mapserver erst nach einer Verzögerung ohne Mausbewegung erfolgt
+    if (timer) {
+        clearTimeout(timer);
+    }
 
     // Prüfen, ob sich Mauszeiger innerhalb eines selektierten Spielplatzes befindet, um Cursor zu ändern
     if (cursorInSelection(coordinate) && !evt.dragging && !$('#map')[0].classList.contains('grabbing')) {
@@ -310,7 +318,7 @@ map.on('pointermove', function(evt) {
         }
     }
 
-    // falls an Mausposition kein Spielplatzequipment vorhanden ist (oder ein Datenproblem vorhanden ist), auf Popup für Spielplatz (oder Datenproblem) prüfen
+    // falls an Mausposition kein Spielplatzequipment vorhanden ist (oder ein Datenproblem vorhanden ist), auf WMS-Popup für Spielplatz (oder Datenproblem) prüfen
     if (!popupFeature) {
         // um Infos zum Datenproblem oder Namen des Spielplatzes als Popup anzeigen
         const data_playgrounds = dataPlaygrounds.getData(pixel);
@@ -329,43 +337,51 @@ map.on('pointermove', function(evt) {
             map.getTargetElement().style.cursor = 'help';
         }
         if (hit_playgrounds | hit_issues) {
-            var src;
-            if (active == "playgrounds") {
-                src = sourcePlaygrounds;
-            } else {
-                src = sourceIssues;
-            }
-            const url = src.getFeatureInfoUrl(
-                coordinate, map.getView().getResolution(), 'EPSG:3857',
-                { 'INFO_FORMAT': 'application/json' }
-            );
-            if (url) {
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.features.length > 0) {
 
-                            // Popup für WMS-Layer soll sich nicht an Mausposition, sondern in Featuremitte befinden, da WMS zu langsam reagiert
-                            // -> Ausdehung der Geometrie des Features an Mausposition ermitteln / Mittelpunkt ableiten
-                            const feature = data.features[0];
-                            var extent = new GeoJSON().readFeature(feature).getGeometry().getExtent();
-
-                            var x = extent[0] + (extent[2] - extent[0]) / 2;
-                            var y = extent[3] - (extent[3] - extent[1]) / 5; // Popup weiter oben anzeigen, damit es möglichst nicht im Weg ist beim klicken
-                            // TODO: Bei Klick auf das Popup wird ebenfalls der Spielplatz selektiert
-                            coordinate = [x, y];
-
-                            if (active == "playgrounds") {
-                                showPopup('playground', popup, coordinate, feature);
-                            } else {
-                                showPopup('issues', popup, coordinate, feature);
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching feature info:', error);
-                    });
-            }    
+            // WMS-Popups erst mit Verzögerung anzeigen, falls sich die Maus nicht mehr (so schnell) bewegt, um Datenabfragen an Mapserver zu reduzieren
+            var delay = 200; // Verzögerung 200ms
+            timer = setTimeout(() => {
+                if (pixel == pixel_last && coordinate == coordinate_last) {
+                    var src;
+                    if (active == "playgrounds") {
+                        src = sourcePlaygrounds;
+                    } else {
+                        src = sourceIssues;
+                    }
+                    const url = src.getFeatureInfoUrl(
+                        coordinate, map.getView().getResolution(), 'EPSG:3857',
+                        { 'INFO_FORMAT': 'application/json' }
+                    );
+                    if (url) {
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.features.length > 0) {
+        
+                                    // Popup für WMS-Layer soll sich nicht an Mausposition, sondern in Featuremitte befinden, da WMS zu langsam reagiert
+                                    // -> Ausdehung der Geometrie des Features an Mausposition ermitteln / Mittelpunkt ableiten
+                                    const feature = data.features[0];
+                                    var extent = new GeoJSON().readFeature(feature).getGeometry().getExtent();
+        
+                                    var x = extent[0] + (extent[2] - extent[0]) / 2;
+                                    var y = extent[3] - (extent[3] - extent[1]) / 5; // Popup weiter oben anzeigen, damit es möglichst nicht im Weg ist beim klicken
+                                    // TODO: Bei Klick auf das Popup wird ebenfalls der Spielplatz selektiert
+                                    var popup_coord = [x, y];
+        
+                                    if (active == "playgrounds") {
+                                        showPopup('playground', popup, popup_coord, feature);
+                                    } else {
+                                        showPopup('issues', popup, popup_coord, feature);
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching feature info:', error);
+                            });
+                    }  
+                }
+            }, delay);
+  
         } else {
             map.getTargetElement().style.cursor = '';
             if (popover) {
@@ -373,6 +389,10 @@ map.on('pointermove', function(evt) {
             }
         }
     }
+
+    // Aktualisiere letzte Mausposition
+    pixel_last = pixel;
+    coordinate_last = coordinate;
 });
 
 // beim Rauszoomen prüfen, ob die Auswahl entfernt werden kann, wenn man zu weit vom selektierten Spielplatz wegzoomt
