@@ -1,0 +1,5 @@
+node_modules
+dist
+lib
+.vite
+data/berlin-latest.osm.pbf

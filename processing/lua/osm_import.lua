@@ -275,45 +275,6 @@ local completeness = osm2pgsql.define_table({
         { column = 'feature_type' },
         { column = 'bug_message' },
         { column = 'bug_level' },
-
-        -- -- Spielplätze ohne access oder Fotos
-        -- { column = 'leisure' },
-        -- { column = 'access' },
-        -- { column = 'image' },
-        -- { column = 'wikimedia_commons' },
-
-        -- -- Spielplatzausstattung mit fehlenden Detailattributen
-        -- { column = 'playground' },
-        -- { column = 'amenity' },
-        -- { column = 'leisure' },
-        -- { column = 'height' }, -- Höhe: slide, climbingwall, climbing_pole
-        -- { column = 'incline' }, -- Neigung/Richtung, falls Linie: slide, steps, climbing_slope, zipwire
-        -- { column = 'material' }, -- Material: slide, climbingframe, structure, bench
-        -- { column = 'capacity' }, -- Plätze: seesaw, swing, tire_swing, bicycle_parking
-        -- { column = 'step_count' }, -- Stufenanzahl: steps, ladder
-        -- { column = 'handrail' }, -- Haltevorrichtung: rope_traverse, climbing_slope
-        -- { column = 'handrail:left' }, -- Haltevorrichtung: rope_traverse, climbing_slope
-        -- { column = 'handrail:right' }, -- Haltevorrichtung: rope_traverse, climbing_slope
-        -- { column = 'handrail:center' }, -- Haltevorrichtung: rope_traverse, climbing_slope
-        -- { column = 'orientation' }, -- Bewegungsrichtung: sand_pulley
-        -- { column = 'check_date' }, -- Prüfdatum: pump
-        -- { column = 'backrest' }, -- Rückenlehne: bench
-        -- { column = 'direction' }, -- Ausrichtung: bench
-        -- { column = 'bicycle_parking' }, -- Fahrradständertyp: bicycle_parking
-        -- { column = 'covered' }, -- Überdeckung: picnic_table
-        -- { column = 'sport' }, -- Sportart: pitch
-        -- { column = 'surface' }, -- Oberfläche: pitch
-
-        -- -- Gebäude ohne Höhenangaben (für Schattenberechnung)
-        -- { column = 'building' },
-        -- { column = 'height' },
-        -- { column = 'est_height' },
-        -- { column = 'building:levels' },
-
-        -- -- Bäume ohne Kronendurchmesser (für Schattenberechnung)
-        -- { column = 'natural' },
-        -- { column = 'diameter_crown' },
-
         { column = 'geom', type = 'point', not_null = true }
     }
 })
@@ -504,45 +465,10 @@ end
 -- 5) für Datenprobleme
 function process_completeness(object, geom, table, feature_class, feature_type, bug_message, bug_level)
     table:insert({
-
         feature_class = feature_class,
         feature_type = feature_type,
         bug_message = bug_message,
         bug_level = bug_level,
-
-        -- leisure = object.tags.leisure,
-        -- access = object.tags.access,
-        -- image = object.tags.image,
-        -- wikimedia_commons = object.tags.wikimedia_commons,
-
-        -- playground = object.tags.playground,
-        -- amenity = object.tags.amenity,
-        -- leisure = object.tags.leisure,
-        -- height = object.tags.height,
-        -- incline = object.tags.incline,
-        -- material = object.tags.material,
-        -- capacity = object.tags.capacity,
-        -- step_count = object.tags.step_count,
-        -- handrail = object.tags.handrail,
-        -- ["handrail:left"] = object.tags["handrail:left"],
-        -- ["handrail:right"] = object.tags["handrail:right"],
-        -- ["handrail:center"] = object.tags["handrail:center"],
-        -- orientation = object.tags.orientation,
-        -- check_date = object.tags.check_date,
-        -- backrest = object.tags.backrest,
-        -- direction = object.tags.direction,
-        -- bicycle_parking = object.tags.bicycle_parking,
-        -- covered = object.tags.covered,
-        -- sport = object.tags.sport,
-        -- surface = object.tags.surface,
-
-        -- building = object.tags.building,
-        -- height = object.tags.height,
-        -- est_height = object.tags.est_height,
-        -- ["building:levels"] = object.tags["building:levels"],
-        -- natural = object.tags.natural,
-        -- diameter_crown = object.tags.diameter_crown,
-
         geom = geom
     })
 end
