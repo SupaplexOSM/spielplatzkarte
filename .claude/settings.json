@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh label:*)",
+      "Bash(gh project:*)",
+      "Bash(gh release:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh run:*)",
+      "Bash(make:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ci:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run:*)",
+      "Bash(npm --prefix app:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npx --prefix app:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker build:*)",
+      "Bash(openspec:*)",
+      "Bash(node:*)",
+      "Bash(chmod +x:*)",
+      "Bash(cat oci/*.sh)",
+      "Bash(cat oci/*.conf)",
+      "Bash(ls *.yml *.yaml)",
+      "Bash(ls docker-compose*)",
+      "Bash(ls compose*)",
+      "Bash(ls Dockerfile*)",
+      "Bash(ls oci/**)",
+      "Bash(grep:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch"
+    ]
+  }
+}

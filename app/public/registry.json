@@ -1,0 +1,9 @@
+{
+  "instances": [
+    {
+      "slug": "local",
+      "url":  "/api",
+      "name": "Local"
+    }
+  ]
+}

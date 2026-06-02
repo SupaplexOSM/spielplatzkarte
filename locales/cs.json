@@ -1,0 +1,138 @@
+{
+  "appTitle": "Mapa hřišť – {{regionName}}",
+  "search": {
+    "placeholder": "Hledat …",
+    "found": "\"{{query}}\" v {{location}}",
+    "foundGeneric": "\"{{query}}\" nalezeno",
+    "notFound": "Žádné výsledky nenalezeny!",
+    "ariaLabel": "Location search",
+    "clearLabel": "Clear search"
+  },
+  "nav": {
+    "addData": "Přidat data",
+    "about": "O projektu",
+    "menu": "Menu"
+  },
+  "info": {
+    "hint": "Klepněte na hřiště pro zobrazení podrobností",
+    "shareBtn": "Sdílet hřiště",
+    "osmBtn": "Zobrazit na OpenStreetMap",
+    "closeBtn": "Zavřít",
+    "backToMap": "Zpět na mapu"
+  },
+  "completeness": {
+    "complete": "Fotografie, název a podrobnosti k dispozici",
+    "partial": "Částečně zmapováno",
+    "missing": "Žádná data"
+  },
+  "accordion": {
+    "photos": "Fotografie",
+    "equipment": "Vybavení",
+    "shadow": "Stín",
+    "surroundings": "Okolí",
+    "reviews": "Recenze",
+    "completeness": "Úplnost dat"
+  },
+  "location": {
+    "btn": "Moje poloha",
+    "yourLocation": "vaší polohy",
+    "am": "near {name}",
+    "anDer": "near {name}",
+    "near": "near {name}"
+  },
+  "nearby": {
+    "title": "V blízkosti {{label}}",
+    "defaultName": "Hřiště",
+    "thisLocation": "tohoto místa"
+  },
+  "equipment": {
+    "fitnessDefault": "Fitness zařízení",
+    "addHint": "Vybavení zatím není individuálně zmapováno – pomozte! 👇",
+    "addLink": "Přidat vybavení",
+    "mapcompleteHint": "Help map equipment on {link}."
+  },
+  "photos": {
+    "none": "Pro toto hřiště zatím nejsou žádné fotografie.<br>Byli jste tam?",
+    "addLink": "Přidat fotografii",
+    "enlarge": "Kliknutím zvětšíte",
+    "thumbnail": "Fotografie {{n}}"
+  },
+  "poi": {
+    "errorLoad": "Nepodařilo se načíst data okolí.",
+    "alwaysOpen": "Vždy otevřeno",
+    "open": "Otevřeno",
+    "openUntil": "Otevřeno do {{time}}",
+    "closed": "Zavřeno",
+    "opensAt": "Otevírá {{day}} v {{time}}",
+    "openingHours": "Otevírací doba",
+    "today": "Dnes",
+    "tomorrow": "Zítra",
+    "categories": {
+      "toilets": "Toalety",
+      "busStops": "Autobusové zastávky",
+      "iceCream": "Zmrzlina",
+      "shopping": "Nákupy",
+      "drugstore": "Drogerie",
+      "emergency": "Pohotovost"
+    },
+    "fallbacks": {
+      "toilets": "Veřejná toaleta",
+      "busStops": "Autobusová zastávka",
+      "iceCream": "Zmrzlinárna",
+      "shopping": "Obchod",
+      "drugstore": "Drogerie",
+      "emergency": "Nemocnice"
+    }
+  },
+  "modal": {
+    "closeBtn": "Zavřít",
+    "backToMap": "Zpět na mapu",
+    "streetPhoto": "Fotografie ulice",
+    "prevPhoto": "Předchozí fotografie",
+    "nextPhoto": "Další fotografie",
+    "addData": {
+      "osm": {
+        "label": "OpenStreetMap",
+        "text": "Data pocházejí z {{osmLink}} — volné, kolaborativní mapy světa vytvořené miliony dobrovolníků. Zobrazuje se pouze to, co bylo zmapováno.",
+        "wikiUrl": "https://cs.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "contribute": {
+        "label": "Přispívejte do hřišť",
+        "text": "Kdokoli může přispívat. Dobrým výchozím bodem je {{learnOsmLink}}. Příslušné tagy jsou zdokumentovány v {{wikiLink}} a na stránce o {{equipmentLink}}.",
+        "learnOsmUrl": "https://learnosm.org/cs/beginner/",
+        "wikiLabel": "wiki OSM",
+        "equipmentLabel": "mapování jednotlivých zařízení"
+      },
+      "photos": {
+        "label": "Přidávejte fotografie",
+        "text": "Fotografie lze nahrát přímo přes {{mapcompleteLink}} — otevřete hřiště a klikněte na \"Přidat fotografii\". Fotografie jsou poskytovány prostřednictvím {{panoramaxLink}}."
+      },
+      "community": {
+        "label": "Komunita",
+        "text": "Máte otázky nebo chcete se zapojit? Místní komunita OSM je dostupná přes {{chatLink}}.",
+        "chatLabel": "chat místní komunity OSM"
+      }
+    },
+    "about": {
+      "history": {
+        "label": "Historie",
+        "text": "Mapa hřišť byla vytvořena {{authorLink}} jako závěrečný projekt {{courseLink}} — původně zaměřený na Berlín. Postupem času se rozvinula v obecnou mapu použitelnou pro jakoukoli oblast OSM.",
+        "courseUrl": "https://gis-trainer.com/de/gis_webmapping.php",
+        "courseLabel": "kurzu GIS a webového mapování"
+      },
+      "project": {
+        "label": "Projekt",
+        "text": "Mapa hřišť je volná, interaktivní webová mapa založená na datech {{osmLink}}. Neobsahuje proprietární data, nevyžaduje přihlášení a nesleduje uživatele. Kdo zlepší data hřišť v OSM, automaticky zlepšuje i tuto mapu.",
+        "osmWikiUrl": "https://cs.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "source": {
+        "label": "Zdrojový kód",
+        "text": "Projekt je open source a {{repoLink}}.",
+        "repoLabel": "veřejně dostupný"
+      }
+    }
+  },
+  "hub": {
+    "importing": "aktualizace"
+  }
+}

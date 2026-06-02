@@ -1,5 +1,31 @@
 node_modules
 dist
-lib
+/lib
 .vite
 data/berlin-latest.osm.pbf
+
+# Local env file — may contain credentials (POSTGRES_PASSWORD, etc.).
+# Use .env.example as the template.
+.env
+
+# New Svelte app
+app/node_modules/
+app/dist/
+
+# Playwright
+test-results/
+playwright-report/
+
+# AI tools
+_bmad-output/
+_bmad/
+docs/project-scan-report.json
+
+# Claude Code — per-user overlays
+.claude/settings.local.json
+.claude/skills/
+
+# MkDocs
+site/
+.venv
+/spieli/

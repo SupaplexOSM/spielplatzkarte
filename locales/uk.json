@@ -1,0 +1,138 @@
+{
+  "appTitle": "Карта майданчиків – {{regionName}}",
+  "search": {
+    "placeholder": "Пошук …",
+    "found": "\"{{query}}\" у {{location}}",
+    "foundGeneric": "\"{{query}}\" знайдено",
+    "notFound": "Результатів не знайдено!",
+    "ariaLabel": "Location search",
+    "clearLabel": "Clear search"
+  },
+  "nav": {
+    "addData": "Додати дані",
+    "about": "Про проєкт",
+    "menu": "Меню"
+  },
+  "info": {
+    "hint": "Натисніть на майданчик, щоб побачити деталі",
+    "shareBtn": "Поділитися майданчиком",
+    "osmBtn": "Переглянути на OpenStreetMap",
+    "closeBtn": "Закрити",
+    "backToMap": "Назад до карти"
+  },
+  "completeness": {
+    "complete": "Фотографії, назва та деталі доступні",
+    "partial": "Частково нанесено на карту",
+    "missing": "Немає даних"
+  },
+  "accordion": {
+    "photos": "Фотографії",
+    "equipment": "Обладнання",
+    "shadow": "Тінь",
+    "surroundings": "Околиці",
+    "reviews": "Відгуки",
+    "completeness": "Повнота даних"
+  },
+  "location": {
+    "btn": "Моє місцезнаходження",
+    "yourLocation": "вашого місцезнаходження",
+    "am": "near {name}",
+    "anDer": "near {name}",
+    "near": "near {name}"
+  },
+  "nearby": {
+    "title": "Поблизу {{label}}",
+    "defaultName": "Майданчик",
+    "thisLocation": "цього місця"
+  },
+  "equipment": {
+    "fitnessDefault": "Тренажер",
+    "addHint": "Обладнання ще не нанесено індивідуально – допоможіть! 👇",
+    "addLink": "Додати обладнання",
+    "mapcompleteHint": "Help map equipment on {link}."
+  },
+  "photos": {
+    "none": "Ще немає фотографій для цього майданчика.<br>Ви вже там були?",
+    "addLink": "Додати фотографію",
+    "enlarge": "Натисніть, щоб збільшити",
+    "thumbnail": "Фотографія {{n}}"
+  },
+  "poi": {
+    "errorLoad": "Не вдалося завантажити дані про околиці.",
+    "alwaysOpen": "Завжди відкрито",
+    "open": "Відкрито",
+    "openUntil": "Відкрито до {{time}}",
+    "closed": "Зачинено",
+    "opensAt": "Відкривається {{day}} о {{time}}",
+    "openingHours": "Години роботи",
+    "today": "Сьогодні",
+    "tomorrow": "Завтра",
+    "categories": {
+      "toilets": "Туалети",
+      "busStops": "Автобусні зупинки",
+      "iceCream": "Морозиво",
+      "shopping": "Магазини",
+      "drugstore": "Аптека",
+      "emergency": "Швидка допомога"
+    },
+    "fallbacks": {
+      "toilets": "Громадський туалет",
+      "busStops": "Автобусна зупинка",
+      "iceCream": "Морозивня",
+      "shopping": "Магазин",
+      "drugstore": "Аптека",
+      "emergency": "Лікарня"
+    }
+  },
+  "modal": {
+    "closeBtn": "Закрити",
+    "backToMap": "Повернутися до карти",
+    "streetPhoto": "Фото вулиці",
+    "prevPhoto": "Попередня фотографія",
+    "nextPhoto": "Наступна фотографія",
+    "addData": {
+      "osm": {
+        "label": "OpenStreetMap",
+        "text": "Дані надходять з {{osmLink}} — вільної, спільної карти світу, створеної мільйонами волонтерів. Тут відображається лише те, що було нанесено на карту.",
+        "wikiUrl": "https://uk.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "contribute": {
+        "label": "Додавайте майданчики",
+        "text": "Будь-хто може зробити внесок. Гарним відправним пунктом є {{learnOsmLink}}. Відповідні теги задокументовано у {{wikiLink}} та на сторінці про {{equipmentLink}}.",
+        "learnOsmUrl": "https://learnosm.org/uk/beginner/",
+        "wikiLabel": "вікі OSM",
+        "equipmentLabel": "нанесення окремого обладнання"
+      },
+      "photos": {
+        "label": "Додавайте фотографії",
+        "text": "Фотографії можна завантажити безпосередньо через {{mapcompleteLink}} — відкрийте майданчик і натисніть «Додати фотографію». Фотографії надаються {{panoramaxLink}}."
+      },
+      "community": {
+        "label": "Спільнота",
+        "text": "Маєте питання або хочете приєднатися? Місцева спільнота OSM доступна через {{chatLink}}.",
+        "chatLabel": "чат місцевої спільноти OSM"
+      }
+    },
+    "about": {
+      "history": {
+        "label": "Історія",
+        "text": "Карта майданчиків була створена {{authorLink}} як фінальний проєкт {{courseLink}} — спочатку орієнтований на Берлін. З часом вона перетворилася на загальну карту, придатну для будь-якого регіону OSM.",
+        "courseUrl": "https://gis-trainer.com/de/gis_webmapping.php",
+        "courseLabel": "курсу GIS та веб-картографії"
+      },
+      "project": {
+        "label": "Проєкт",
+        "text": "Карта майданчиків — це безкоштовна, інтерактивна веб-карта на основі даних {{osmLink}}. Вона не містить пропрієтарних даних, не вимагає входу та не відстежує користувачів. Той, хто покращує дані про майданчики в OSM, автоматично покращує і цю карту.",
+        "osmWikiUrl": "https://uk.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "source": {
+        "label": "Вихідний код",
+        "text": "Проєкт є відкритим і {{repoLink}}.",
+        "repoLabel": "загальнодоступним"
+      }
+    }
+  },
+  "hub": {
+    "importing": "оновлення"
+  }
+}

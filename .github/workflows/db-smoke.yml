@@ -1,0 +1,58 @@
+name: DB smoke test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'importer/api.sql'
+      - 'db/init.sql'
+
+jobs:
+  db-smoke:
+    name: Fresh-import smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      - name: Set up environment
+        run: cp .env.example .env
+
+      - name: Start database
+        run: docker compose up -d db
+        timeout-minutes: 2
+
+      - name: Wait for database
+        run: |
+          until docker compose exec -T db pg_isready -U osm -d osm; do
+            sleep 1
+          done
+        timeout-minutes: 2
+
+      - name: Load osm2pgsql table stubs
+        run: docker compose exec -T db psql -U osm -d osm < dev/ci/planet-osm-tables.sql
+
+      - name: Apply api.sql on blank DB
+        # Mirrors the two-pass logic in `make db-apply`:
+        # ALTER SYSTEM runs outside a transaction; everything else in one.
+        run: |
+          SUBST_VARS='$OSM_RELATION_ID $PG_MAX_PARALLEL_WORKERS $PG_MAX_PARALLEL_WORKERS_PER_GATHER $PG_MAX_PARALLEL_MAINTENANCE_WORKERS $PG_MAINTENANCE_WORK_MEM $PG_WORK_MEM $SPIELI_VERSION $IMPRESSUM_URL $PRIVACY_URL $SITE_URL'
+          envsubst "$SUBST_VARS" < importer/api.sql \
+            | grep -E '^ALTER SYSTEM' \
+            | docker compose exec -T db psql -U osm -d osm
+          envsubst "$SUBST_VARS" < importer/api.sql \
+            | grep -v '^ALTER SYSTEM' \
+            | docker compose exec -T db psql -U osm -d osm --single-transaction
+        env:
+          OSM_RELATION_ID: 62700
+          PG_MAX_PARALLEL_WORKERS: 2
+          PG_MAX_PARALLEL_WORKERS_PER_GATHER: 1
+          PG_MAX_PARALLEL_MAINTENANCE_WORKERS: 1
+          PG_MAINTENANCE_WORK_MEM: 64MB
+          PG_WORK_MEM: 4MB
+          SPIELI_VERSION: 0.0.0-ci
+          IMPRESSUM_URL: ""
+          PRIVACY_URL: ""
+          SITE_URL: http://localhost:8080

@@ -1,0 +1,138 @@
+{
+  "appTitle": "遊び場マップ – {{regionName}}",
+  "search": {
+    "placeholder": "検索 …",
+    "found": "{{location}}で「{{query}}」",
+    "foundGeneric": "「{{query}}」が見つかりました",
+    "notFound": "結果が見つかりませんでした！",
+    "ariaLabel": "Location search",
+    "clearLabel": "Clear search"
+  },
+  "nav": {
+    "addData": "データを追加",
+    "about": "プロジェクトについて",
+    "menu": "メニュー"
+  },
+  "info": {
+    "hint": "遊び場をタップして詳細を表示",
+    "shareBtn": "遊び場を共有",
+    "osmBtn": "OpenStreetMapで表示",
+    "closeBtn": "閉じる",
+    "backToMap": "地図に戻る"
+  },
+  "completeness": {
+    "complete": "写真・名称・詳細あり",
+    "partial": "一部マッピング済み",
+    "missing": "データなし"
+  },
+  "accordion": {
+    "photos": "写真",
+    "equipment": "遊具",
+    "shadow": "日陰",
+    "surroundings": "周辺",
+    "reviews": "レビュー",
+    "completeness": "データの完成度"
+  },
+  "location": {
+    "btn": "現在地",
+    "yourLocation": "現在地",
+    "am": "near {name}",
+    "anDer": "near {name}",
+    "near": "near {name}"
+  },
+  "nearby": {
+    "title": "{{label}}の近く",
+    "defaultName": "遊び場",
+    "thisLocation": "この場所"
+  },
+  "equipment": {
+    "fitnessDefault": "フィットネス器具",
+    "addHint": "遊具はまだ個別にマッピングされていません – ご協力ください！ 👇",
+    "addLink": "遊具を追加",
+    "mapcompleteHint": "Help map equipment on {link}."
+  },
+  "photos": {
+    "none": "この遊び場の写真はまだありません。<br>訪れたことがありますか？",
+    "addLink": "写真を追加",
+    "enlarge": "クリックして拡大",
+    "thumbnail": "写真 {{n}}"
+  },
+  "poi": {
+    "errorLoad": "周辺データを読み込めませんでした。",
+    "alwaysOpen": "常時開放",
+    "open": "営業中",
+    "openUntil": "{{time}}まで営業",
+    "closed": "閉店",
+    "opensAt": "{{day}} {{time}}に開きます",
+    "openingHours": "営業時間",
+    "today": "今日",
+    "tomorrow": "明日",
+    "categories": {
+      "toilets": "トイレ",
+      "busStops": "バス停",
+      "iceCream": "アイスクリーム",
+      "shopping": "ショッピング",
+      "drugstore": "ドラッグストア",
+      "emergency": "救急"
+    },
+    "fallbacks": {
+      "toilets": "公衆トイレ",
+      "busStops": "バス停",
+      "iceCream": "アイスクリーム店",
+      "shopping": "店舗",
+      "drugstore": "ドラッグストア",
+      "emergency": "病院"
+    }
+  },
+  "modal": {
+    "closeBtn": "閉じる",
+    "backToMap": "地図に戻る",
+    "streetPhoto": "ストリート写真",
+    "prevPhoto": "前の写真",
+    "nextPhoto": "次の写真",
+    "addData": {
+      "osm": {
+        "label": "OpenStreetMap",
+        "text": "データは{{osmLink}}から提供されています — 数百万人のボランティアによって作られた無料の共同世界地図です。マッピングされたものだけが表示されます。",
+        "wikiUrl": "https://ja.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "contribute": {
+        "label": "遊び場に貢献する",
+        "text": "誰でも貢献できます。{{learnOsmLink}}が良い出発点です。関連するタグは{{wikiLink}}および{{equipmentLink}}のページに記載されています。",
+        "learnOsmUrl": "https://learnosm.org/ja/beginner/",
+        "wikiLabel": "OSM wiki",
+        "equipmentLabel": "個別遊具のマッピング"
+      },
+      "photos": {
+        "label": "写真を追加する",
+        "text": "写真は{{mapcompleteLink}}から直接アップロードできます — 遊び場を開いて「写真を追加」をクリックしてください。写真は{{panoramaxLink}}によって提供されます。"
+      },
+      "community": {
+        "label": "コミュニティ",
+        "text": "質問や参加を希望する方は、{{chatLink}}からローカルOSMコミュニティにご連絡ください。",
+        "chatLabel": "ローカルOSMコミュニティチャット"
+      }
+    },
+    "about": {
+      "history": {
+        "label": "歴史",
+        "text": "遊び場マップは{{authorLink}}によって{{courseLink}}の最終プロジェクトとして作成されました — 当初はベルリンを対象としていました。その後、任意のOSM地域で使用できる汎用マップへと発展しました。",
+        "courseUrl": "https://gis-trainer.com/de/gis_webmapping.php",
+        "courseLabel": "GISおよびウェブマッピングコース"
+      },
+      "project": {
+        "label": "プロジェクト",
+        "text": "遊び場マップは{{osmLink}}データに基づく無料のインタラクティブウェブマップです。独自データを含まず、ログインも不要で、ユーザーを追跡しません。OSMで遊び場データを改善すると、このマップも自動的に改善されます。",
+        "osmWikiUrl": "https://ja.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "source": {
+        "label": "ソースコード",
+        "text": "このプロジェクトはオープンソースで、{{repoLink}}。",
+        "repoLabel": "公開されています"
+      }
+    }
+  },
+  "hub": {
+    "importing": "更新中"
+  }
+}

@@ -1,0 +1,27 @@
+# Weblate component configuration reference.
+#
+# This file is NOT automatically read by Weblate. Use it as a checklist
+# when manually configuring the component on hosted.weblate.org (#356).
+# Field names and values map directly to the Weblate REST API schema:
+# https://docs.weblate.org/en/latest/api.html#post--api-components-
+#
+# NOTE: The design doc originally specified file_format: json-i18n — that
+# identifier does not exist in Weblate. The correct format for nested JSON
+# files is json-nested. ICU plural strings (e.g. equipment.deviceCount) are
+# treated as opaque string values; translators write the full ICU expression
+# for their language's plural forms, which Weblate's string checks validate.
+
+component:
+  name: spieli
+  slug: spieli
+  file_format: json-nested
+  filemask: locales/*.json
+  template: locales/en.json
+  source_language: en
+  push_branch: weblate-translations
+  push_on_commit: true
+  squash_commits: true
+  commit_message: "chore(i18n): update translations from Weblate"
+  add_message: "chore(i18n): add {{ language_name }} translation from Weblate"
+  delete_message: "chore(i18n): remove {{ language_name }} translation from Weblate"
+  new_lang: add

@@ -1,5 +1,18 @@
 version: 2
 updates:
+  # GitHub Actions — keeps workflow SHA pins up to date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Svelte app dependencies
+  - package-ecosystem: "npm"
+    directory: "/app"
+    schedule:
+      interval: "weekly"
+
+  # Root package.json (Playwright / legacy tooling)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:

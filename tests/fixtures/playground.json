@@ -1,0 +1,33 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [13.404, 52.520],
+            [13.405, 52.520],
+            [13.405, 52.521],
+            [13.404, 52.521],
+            [13.404, 52.520]
+          ]
+        ]
+      },
+      "properties": {
+        "osm_id": 123456789,
+        "osm_type": "W",
+        "name": "Testspielplatz <script>alert('xss')</script> <XSS & Friends>",
+        "description": "Ein Spielplatz mit <script>alert('xss')</script> Beschreibung",
+        "note": "Hinweis mit <b>HTML</b> & Sonderzeichen",
+        "operator": "Bezirksamt Mitte & Co.",
+        "surface": "sand",
+        "access": "yes",
+        "area": 450,
+        "tree_count": 3,
+        "nearest_highway": "Unter den Linden"
+      }
+    }
+  ]
+}

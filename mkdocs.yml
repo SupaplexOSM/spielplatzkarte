@@ -1,0 +1,84 @@
+site_name: spieli
+site_url: https://mfuhrmann.github.io/spieli/
+repo_url: https://github.com/mfuhrmann/spieli
+repo_name: mfuhrmann/spieli
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.action.edit
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - User Guide: user-guide.md
+  - Getting Started:
+      - Quick Start: getting-started/quick-start.md
+  - Operations:
+      - Manual Deploy: ops/manual-deploy.md
+      - HTTPS Setup: ops/https-setup.md
+      - Federated Deployment: ops/federated-deployment.md
+      - Single-host Federation: ops/single-host-federation.md
+      - Add a Data-node: ops/add-data-node.md
+      - Configuration: ops/configuration.md
+      - Upgrading: ops/upgrade.md
+      - Switching Regions: ops/switch-region.md
+      - Scheduled Import: ops/scheduled-import.md
+      - Refresh Data: ops/refresh-data.md
+      - Backup and Restore: ops/backup-restore.md
+      - Monitoring: ops/monitoring.md
+      - Security: ops/security.md
+      - Troubleshooting: ops/troubleshooting.md
+      - Uninstall: ops/uninstall.md
+  - Contributing:
+      - Local Development: contributing/local-dev.md
+      - Frontend Guide: contributing/frontend-guide.md
+      - Import Pipeline: contributing/import-pipeline.md
+      - Testing Guide: contributing/testing.md
+      - Add a Playground Device: contributing/add-device.md
+      - Add a Sport Pitch Type: contributing/add-sport-type.md
+      - Translate spieli: contributing/translations.md
+      - Translation Guide: contributing/translation-guide.md
+      - Maintainer Guide: contributing/maintaining.md
+  - Reference:
+      - Architecture: reference/architecture.md
+      - Tech Stack: reference/tech-stack.md
+      - API: reference/api.md
+      - Federation: reference/federation.md
+      - registry.json: reference/registry-json.md
+      - External Services: reference/external-services.md
+      - Equipment Types: reference/equipment.md
+      - Glossary: reference/glossary.md
+      - Project Overview: project-overview.md
+      - Source Tree: source-tree-analysis.md
+  - Decisions:
+      - ADR-0001 — OpenSpec sharing policy: adr/0001-openspec-sharing-policy.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true

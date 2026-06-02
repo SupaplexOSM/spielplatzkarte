@@ -1,0 +1,25 @@
+[Unit]
+Description=spieli OSM data importer
+Documentation=https://github.com/mfuhrmann/spieli
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+
+# Set this to the directory where spieli is checked out
+WorkingDirectory=/opt/spieli
+
+# Load OSM_RELATION_ID, PBF_URL, and other env vars from the project .env file
+# Update this path to match WorkingDirectory= above
+EnvironmentFile=/opt/spieli/.env
+
+# Run as the user that owns the deployment directory and is in the docker group
+# Uncomment and set to the appropriate user:
+#User=spieli
+
+ExecStart=docker compose run --rm importer
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=spieli-import

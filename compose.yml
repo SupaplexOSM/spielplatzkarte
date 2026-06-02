@@ -1,0 +1,196 @@
+# spieli — full stack (local development)
+#
+# Normal start:
+#   docker compose up -d
+#
+# First-time data import (or re-import to update data):
+#   docker compose run --rm importer
+#
+# To deploy for a different region: copy .env.example → .env and set
+#   OSM_RELATION_ID and PBF_URL (plus any optional UI variables).
+
+services:
+
+  # ── PostGIS database ────────────────────────────────────────────────────────
+  # Tuning GUCs (max_parallel_workers, work_mem, …) are applied via
+  # ALTER SYSTEM SET in importer/api.sql — they persist in the pgdata volume
+  # and apply to every connection, no `command:` override needed here.
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    environment:
+      POSTGRES_DB:       osm
+      POSTGRES_USER:     osm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/10_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U osm -d osm"]
+      interval: 10s
+      timeout:  5s
+      retries:  10
+    restart: unless-stopped
+
+  # ── OSM importer (run manually; not started by default) ─────────────────────
+  # docker compose run --rm importer
+  importer:
+    build: ./importer
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST:     db
+      POSTGRES_PORT:     5432
+      POSTGRES_DB:       osm
+      POSTGRES_USER:     osm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      PBF_URL:                ${PBF_URL:-https://download.geofabrik.de/europe/germany/hessen-latest.osm.pbf}
+      OSM2PGSQL_THREADS:      ${OSM2PGSQL_THREADS:-4}
+      OSM_RELATION_ID:        ${OSM_RELATION_ID:-454863}
+      OSM_BBOX:               ${OSM_BBOX:-}
+      OSM_BBOX_PADDING:       ${OSM_BBOX_PADDING:-0.15}
+      OSM_PREFILTER_MIN_MB:   ${OSM_PREFILTER_MIN_MB:-20}
+      PG_MAX_PARALLEL_WORKERS:             ${PG_MAX_PARALLEL_WORKERS:-6}
+      PG_MAX_PARALLEL_WORKERS_PER_GATHER:  ${PG_MAX_PARALLEL_WORKERS_PER_GATHER:-4}
+      PG_MAX_PARALLEL_MAINTENANCE_WORKERS: ${PG_MAX_PARALLEL_MAINTENANCE_WORKERS:-4}
+      PG_MAINTENANCE_WORK_MEM:             ${PG_MAINTENANCE_WORK_MEM:-512MB}
+      PG_WORK_MEM:                         ${PG_WORK_MEM:-128MB}
+      SPIELI_VERSION:                      ${SPIELI_VERSION:-unknown}
+      REIMPORT_INTERVAL_MIN_DAYS:          ${REIMPORT_INTERVAL_MIN_DAYS:-}
+      REIMPORT_INTERVAL_MAX_DAYS:          ${REIMPORT_INTERVAL_MAX_DAYS:-}
+      IMPRESSUM_NAME:                      ${IMPRESSUM_NAME:-}
+      IMPRESSUM_ORG:                       ${IMPRESSUM_ORG:-}
+      IMPRESSUM_ADDRESS:                   ${IMPRESSUM_ADDRESS:-}
+      IMPRESSUM_EMAIL:                     ${IMPRESSUM_EMAIL:-}
+      IMPRESSUM_PHONE:                     ${IMPRESSUM_PHONE:-}
+      IMPRESSUM_URL:                       ${IMPRESSUM_URL:-}
+      PRIVACY_URL:                         ${PRIVACY_URL:-}
+      SITE_URL:                            ${SITE_URL:-}
+    volumes:
+      - pbf_cache:/data
+    profiles: [import]    # not started by "docker compose up"
+    restart: "no"
+
+  # ── PostgREST — auto-generates REST API from the api schema ─────────────────
+  postgrest:
+    image: postgrest/postgrest:v12.2.0
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI:        postgres://osm:${POSTGRES_PASSWORD:-change-me}@db:5432/osm
+      PGRST_DB_SCHEMA:     api
+      PGRST_DB_ANON_ROLE:  web_anon
+      PGRST_SERVER_PORT:   3000
+      PGRST_LOG_LEVEL:     warn
+    networks:
+      - default
+      - proxy
+    restart: unless-stopped
+
+  # ── Second backend (Hub mode dev testing) ───────────────────────────────────
+  # Provides /api2/ for Vogelsberg (relation 8743914).
+  # Populate with: docker compose run --rm importer2
+  # Tuning GUCs are applied via ALTER SYSTEM in importer/api.sql (see `db`).
+  db2:
+    image: postgis/postgis:16-3.4-alpine
+    environment:
+      POSTGRES_DB:       osm
+      POSTGRES_USER:     osm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - pgdata2:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/10_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U osm -d osm"]
+      interval: 10s
+      timeout:  5s
+      retries:  10
+    restart: unless-stopped
+
+  # docker compose run --rm importer2
+  importer2:
+    build: ./importer
+    depends_on:
+      db2:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST:     db2
+      POSTGRES_PORT:     5432
+      POSTGRES_DB:       osm
+      POSTGRES_USER:     osm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      PBF_URL:                ${PBF_URL:-https://download.geofabrik.de/europe/germany/hessen-latest.osm.pbf}
+      OSM2PGSQL_THREADS:      ${OSM2PGSQL_THREADS:-4}
+      OSM_RELATION_ID:        ${OSM_RELATION_ID2:-454881}
+      OSM_BBOX:               ${OSM_BBOX:-}
+      OSM_BBOX_PADDING:       ${OSM_BBOX_PADDING:-0.15}
+      OSM_PREFILTER_MIN_MB:   ${OSM_PREFILTER_MIN_MB:-20}
+      PG_MAX_PARALLEL_WORKERS:             ${PG_MAX_PARALLEL_WORKERS:-6}
+      PG_MAX_PARALLEL_WORKERS_PER_GATHER:  ${PG_MAX_PARALLEL_WORKERS_PER_GATHER:-4}
+      PG_MAX_PARALLEL_MAINTENANCE_WORKERS: ${PG_MAX_PARALLEL_MAINTENANCE_WORKERS:-4}
+      PG_MAINTENANCE_WORK_MEM:             ${PG_MAINTENANCE_WORK_MEM:-512MB}
+      PG_WORK_MEM:                         ${PG_WORK_MEM:-128MB}
+      SPIELI_VERSION:                      ${SPIELI_VERSION:-unknown}
+    volumes:
+      - pbf_cache:/data
+    profiles: [import2]
+    restart: "no"
+
+  postgrest2:
+    image: postgrest/postgrest:v12.2.0
+    depends_on:
+      db2:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI:        postgres://osm:${POSTGRES_PASSWORD:-change-me}@db2:5432/osm
+      PGRST_DB_SCHEMA:     api
+      PGRST_DB_ANON_ROLE:  web_anon
+      PGRST_SERVER_PORT:   3000
+      PGRST_LOG_LEVEL:     warn
+    restart: unless-stopped
+
+  # ── Svelte app — serves the new frontend and proxies /api/ to PostgREST ─────
+  # Built from oci/app/Dockerfile; use APP_MODE=standalone (default) or hub.
+  app:
+    build:
+      context: .
+      dockerfile: oci/app/Dockerfile
+    depends_on:
+      - postgrest
+      - postgrest2
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      APP_MODE:                    ${APP_MODE:-standalone}
+      REGISTRY_URL:                ${REGISTRY_URL:-/registry.json}
+      OSM_RELATION_ID:             ${OSM_RELATION_ID:-62700}
+      REGION_PLAYGROUND_WIKI_URL:  ${REGION_PLAYGROUND_WIKI_URL:-}
+      REGION_CHAT_URL:             ${REGION_CHAT_URL:-}
+      MAP_ZOOM:                    ${MAP_ZOOM:-12}
+      MAP_MIN_ZOOM:                ${MAP_MIN_ZOOM:-10}
+      POI_RADIUS_M:                ${POI_RADIUS_M:-5000}
+      API_BASE_URL:                /api
+      SITE_URL:                    ${SITE_URL:-}
+      IMPRESSUM_NAME:              ${IMPRESSUM_NAME:-}
+      IMPRESSUM_ORG:               ${IMPRESSUM_ORG:-}
+      IMPRESSUM_ADDRESS:           ${IMPRESSUM_ADDRESS:-}
+      IMPRESSUM_EMAIL:             ${IMPRESSUM_EMAIL:-}
+      IMPRESSUM_PHONE:             ${IMPRESSUM_PHONE:-}
+      IMPRESSUM_URL:               ${IMPRESSUM_URL:-}
+      PRIVACY_URL:                 ${PRIVACY_URL:-}
+    # Uncomment to serve a custom registry.json without rebuilding the image.
+    # Place registry.json next to compose.yml and enable the line below.
+    # volumes:
+    #   - ./registry.json:/usr/share/nginx/html/registry.json:ro
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  pgdata2:
+  pbf_cache:
+
+networks:
+  default:
+  proxy:
+    name: spieli-proxy

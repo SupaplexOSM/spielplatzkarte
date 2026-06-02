@@ -1,0 +1,17 @@
+[Unit]
+Description=Weekly spieli OSM data import
+Documentation=https://github.com/mfuhrmann/spieli
+
+[Timer]
+# Fire once a week (Sunday 00:00 local time).
+# Override to a specific time with a drop-in, e.g.:
+#   OnCalendar=Sun 03:00
+OnCalendar=weekly
+
+# If a run was missed (e.g. server was off), run it on the next boot.
+Persistent=true
+
+Unit=spieli-import.service
+
+[Install]
+WantedBy=timers.target

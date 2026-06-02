@@ -1,0 +1,138 @@
+{
+  "appTitle": "Speeltuinenkaart – {{regionName}}",
+  "search": {
+    "placeholder": "Zoeken …",
+    "found": "\"{{query}}\" in {{location}}",
+    "foundGeneric": "\"{{query}}\" gevonden",
+    "notFound": "Geen resultaten gevonden!",
+    "ariaLabel": "Location search",
+    "clearLabel": "Clear search"
+  },
+  "nav": {
+    "addData": "Gegevens toevoegen",
+    "about": "Over het project",
+    "menu": "Menu"
+  },
+  "info": {
+    "hint": "Tik op een speeltuin voor details",
+    "shareBtn": "Speeltuin delen",
+    "osmBtn": "Bekijk op OpenStreetMap",
+    "closeBtn": "Sluiten",
+    "backToMap": "Terug naar kaart"
+  },
+  "completeness": {
+    "complete": "Foto's, naam & details beschikbaar",
+    "partial": "Gedeeltelijk in kaart gebracht",
+    "missing": "Nog geen gegevens"
+  },
+  "accordion": {
+    "photos": "Foto's",
+    "equipment": "Speeltoestellen",
+    "shadow": "Schaduw",
+    "surroundings": "Omgeving",
+    "reviews": "Beoordelingen",
+    "completeness": "Volledigheid van gegevens"
+  },
+  "location": {
+    "btn": "Mijn locatie",
+    "yourLocation": "jouw locatie",
+    "am": "near {name}",
+    "anDer": "near {name}",
+    "near": "near {name}"
+  },
+  "nearby": {
+    "title": "In de buurt van {{label}}",
+    "defaultName": "Speeltuin",
+    "thisLocation": "deze locatie"
+  },
+  "equipment": {
+    "fitnessDefault": "Fitnesstoestel",
+    "addHint": "Toestellen nog niet individueel in kaart gebracht – help mee! 👇",
+    "addLink": "Toestel toevoegen",
+    "mapcompleteHint": "Help map equipment on {link}."
+  },
+  "photos": {
+    "none": "Nog geen foto's voor deze speeltuin.<br>Ben je er al geweest?",
+    "addLink": "Foto toevoegen",
+    "enlarge": "Klikken om te vergroten",
+    "thumbnail": "Foto {{n}}"
+  },
+  "poi": {
+    "errorLoad": "Omgevingsgegevens konden niet worden geladen.",
+    "alwaysOpen": "Altijd open",
+    "open": "Open",
+    "openUntil": "Open tot {{time}}",
+    "closed": "Gesloten",
+    "opensAt": "Opent {{day}} om {{time}}",
+    "openingHours": "Openingstijden",
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "categories": {
+      "toilets": "Toiletten",
+      "busStops": "Bushaltes",
+      "iceCream": "IJsjes",
+      "shopping": "Winkelen",
+      "drugstore": "Drogisterij",
+      "emergency": "Spoedeisende hulp"
+    },
+    "fallbacks": {
+      "toilets": "Openbaar toilet",
+      "busStops": "Bushalte",
+      "iceCream": "IJssalon",
+      "shopping": "Winkel",
+      "drugstore": "Drogisterij",
+      "emergency": "Ziekenhuis"
+    }
+  },
+  "modal": {
+    "closeBtn": "Sluiten",
+    "backToMap": "Terug naar de kaart",
+    "streetPhoto": "Straatfoto",
+    "prevPhoto": "Vorige foto",
+    "nextPhoto": "Volgende foto",
+    "addData": {
+      "osm": {
+        "label": "OpenStreetMap",
+        "text": "De gegevens komen van {{osmLink}} — een vrije, collaboratieve wereldkaart gemaakt door miljoenen vrijwilligers. Alleen wat in kaart is gebracht verschijnt hier.",
+        "wikiUrl": "https://nl.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "contribute": {
+        "label": "Bijdragen aan speeltuinen",
+        "text": "Iedereen kan bijdragen. Een goed startpunt is {{learnOsmLink}}. De relevante tags zijn gedocumenteerd in de {{wikiLink}} en op de pagina over {{equipmentLink}}.",
+        "learnOsmUrl": "https://learnosm.org/nl/beginner/",
+        "wikiLabel": "OSM-wiki",
+        "equipmentLabel": "het in kaart brengen van individuele speeltoestellen"
+      },
+      "photos": {
+        "label": "Foto's toevoegen",
+        "text": "Foto's kunnen direct worden geüpload via {{mapcompleteLink}} — open een speeltuin en klik op \"Foto toevoegen\". Foto's worden aangeleverd door {{panoramaxLink}}."
+      },
+      "community": {
+        "label": "Gemeenschap",
+        "text": "Vragen of wil je meedoen? De lokale OSM-gemeenschap is bereikbaar via {{chatLink}}.",
+        "chatLabel": "lokale OSM-gemeenschapschat"
+      }
+    },
+    "about": {
+      "history": {
+        "label": "Geschiedenis",
+        "text": "De speeltuinenkaart is gemaakt door {{authorLink}} als eindproject van een {{courseLink}} — oorspronkelijk gericht op Berlijn. In de loop van de tijd is het uitgegroeid tot een generieke kaart die voor elke OSM-regio kan worden gebruikt.",
+        "courseUrl": "https://gis-trainer.com/de/gis_webmapping.php",
+        "courseLabel": "GIS en webmapping cursus"
+      },
+      "project": {
+        "label": "Het project",
+        "text": "De speeltuinenkaart is een vrije, interactieve webkaart op basis van {{osmLink}}-gegevens. Het bevat geen eigendomsgegevens, vereist geen aanmelding en volgt geen gebruikers. Wie speeltuingegevens in OSM verbetert, verbetert automatisch ook deze kaart.",
+        "osmWikiUrl": "https://nl.wikipedia.org/wiki/OpenStreetMap"
+      },
+      "source": {
+        "label": "Broncode",
+        "text": "Het project is open source en {{repoLink}}.",
+        "repoLabel": "openbaar beschikbaar"
+      }
+    }
+  },
+  "hub": {
+    "importing": "bijwerken"
+  }
+}
